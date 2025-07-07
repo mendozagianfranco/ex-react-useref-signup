@@ -1,10 +1,11 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
 const numbers = "0123456789";
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
 
 function App() {
+  const form = useRef();
   const fullName = useRef();
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
@@ -50,11 +51,28 @@ function App() {
       console.log('Non valido');
     }
   }
+  function resetForm() {
+    fullName.current.value = '';
+    setusername('');
+    setPassword('');
+    select.current.value = '';
+    yearsExperience.current.value = '';
+    setDescription('');
+  }
+
+  function scrollToForm() {
+    console.log(form.current.scrollIntoView({ behavior: 'smooth' }));
+
+  }
+
+  useEffect(() => {
+    fullName.current.focus();
+  }, []);
 
 
   return (
     <>
-      <form onSubmit={handleForm}>
+      <form ref={form} onSubmit={handleForm}>
         <p>Nome Completo</p>
         <input type="text" ref={fullName} />
         <p>Username</p>
@@ -89,8 +107,13 @@ function App() {
         )}
         <div>
           <button>Invia il form</button>
+          <button type='button' onClick={resetForm}>Reset</button>
         </div>
       </form>
+      <div style={{ height: '100vh' }}></div>
+      <div style={{ position: 'fixed', bottom: 20, right: 20, }} >
+        <button onClick={scrollToForm}>🠕</button>
+      </div >
     </>
   );
 }
