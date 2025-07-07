@@ -1,15 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
 const numbers = "0123456789";
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
 
 function App() {
-  const [fullName, setFullName] = useState('');
+  const fullName = useRef();
   const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
-  const [select, setSelect] = useState('');
-  const [yearsExperience, setYearsExperience] = useState("");
+  const select = useRef();
+  const yearsExperience = useRef();
   const [description, setDescription] = useState('');
 
   const isUsernameValid = useMemo(() => {
@@ -31,17 +31,19 @@ function App() {
 
   function handleForm(e) {
     e.preventDefault();
-    const isCompiled = fullName.trim() && username.trim() && password.trim() && select && description.trim();
-    const isPositiveNumber = yearsExperience >= 0;
-    const isSelectedSpecialisation = select !== '';
+    const isCompiled = fullName.current.value.trim() && username.trim() && password.trim() && select.current.value && description.trim();
 
-    if (isCompiled && isPositiveNumber && isSelectedSpecialisation && !isUsernameValid && !isPasswordValid && !isDescriptionValid) {
+    const isPositiveNumber = yearsExperience.current.value >= 0;
+    const isSelectedSpecialisation = select.current.value !== '';
+    console.log(isSelectedSpecialisation);
+
+    if (isCompiled && isPositiveNumber && isSelectedSpecialisation && isUsernameValid && isPasswordValid && isDescriptionValid) {
       console.log(`
-        fullname:${fullName}
+        fullname:${fullName.current.value}
         username:${username}
         password:${password}
-        specialisation:${select}
-        yearsExperience:${yearsExperience}
+        specialisation:${select.current.value}
+        yearsExperience:${yearsExperience.current.value}
         description: ${description}
         `);
     } else {
@@ -54,7 +56,7 @@ function App() {
     <>
       <form onSubmit={handleForm}>
         <p>Nome Completo</p>
-        <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} />
+        <input type="text" ref={fullName} />
         <p>Username</p>
         <input type="text" value={username} onChange={e => setusername(e.target.value)} />
         {username.trim() && (
@@ -70,14 +72,14 @@ function App() {
           </p>
         )}
         <p>Specializzazione</p>
-        <select value={select} onChange={e => setSelect(e.target.value)}>
+        <select ref={select}>
           <option value="">----</option>
           <option value="Full Stack">Full Stack</option>
           <option value="Frontend">Frontend</option>
           <option value="Backend">Backend</option>
         </select>
         <p>Anni di esperienza</p>
-        <input type="number" value={yearsExperience} onChange={e => setYearsExperience(e.target.value)} />
+        <input type="number" defaultValue={'0'} ref={yearsExperience} />
         <p>Breve descrizione</p>
         <textarea value={description} onChange={e => setDescription(e.target.value)}></textarea>
         {description.trim() && (
