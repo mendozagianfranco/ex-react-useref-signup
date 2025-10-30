@@ -34,7 +34,7 @@ L’applicazione implementa un form di registrazione con validazioni dinamiche p
 ---
 
 ## Tecnologie utilizzate
-- React 18+  
+- React
 - Hook React: `useState`, `useRef`, `useEffect`, `useMemo`  
 - Controllo validazioni in tempo reale  
 
@@ -61,4 +61,5 @@ npm install
 ```bash
 npm run dev
 ```
+
 
